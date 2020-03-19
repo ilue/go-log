@@ -40,13 +40,14 @@ func (l *Logger) output(level Level, s string) error {
 		buf.WriteByte('.')
 		itoa(buf, msec, 3)
 	}
-	buf.WriteString(" ")
+	buf.WriteByte(' ')
 	{
 		levelStr := _levelTexts[level]
 		buf.WriteString(levelStr)
 		const padding = " "
 		buf.WriteString(padding[:5-len(levelStr)])
 	}
+	buf.WriteByte(' ')
 	buf.WriteString(s)
 	buf.WriteByte('\n')
 
