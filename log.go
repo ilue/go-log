@@ -1,10 +1,15 @@
 package log
 
 import (
+	"io"
 	"os"
 )
 
-var Default = NewLogger(DEBUG, os.Stderr)
+var Default = NewLogger(DEBUG, SyncWriter(os.Stderr))
+
+func Output(w io.Writer) *Logger {
+	return Default.Output(w)
+}
 
 func Panic(v ...interface{}) {
 	Default.Panic(v...)

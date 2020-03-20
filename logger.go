@@ -18,7 +18,15 @@ func NewLogger(level Level, out io.Writer) *Logger {
 	return &Logger{level: level, out: out}
 }
 
-func (l *Logger) output(level Level, s string) error {
+func (l *Logger) Output(w io.Writer) *Logger {
+	return NewLogger(l.level, w)
+}
+
+func (l *Logger) enabled(level Level) bool {
+	return l.level >= level
+}
+
+func (l *Logger) log(level Level, s string) error {
 	now := time.Now()
 	buf := bytebufferpool.Get()
 
@@ -56,80 +64,92 @@ func (l *Logger) output(level Level, s string) error {
 	return err
 }
 
-func (l *Logger) log(level Level, v ...interface{}) {
-	if level <= l.level {
-		l.output(level, fmt.Sprint(v...))
-	}
-}
-
-func (l *Logger) logf(level Level, format string, v ...interface{}) {
-	if level <= l.level {
-		l.output(level, fmt.Sprintf(format, v...))
-	}
-}
-
 func (l *Logger) Panic(v ...interface{}) {
 	s := fmt.Sprint(v...)
-	if PANIC <= l.level {
-		l.output(PANIC, s)
+	if l.enabled(PANIC) {
+		l.log(PANIC, s)
 	}
 	panic(s)
 }
 
 func (l *Logger) Panicf(format string, v ...interface{}) {
 	s := fmt.Sprintf(format, v...)
-	if PANIC <= l.level {
-		l.output(PANIC, s)
+	if l.enabled(PANIC) {
+		l.log(PANIC, s)
 	}
 	panic(s)
 }
 
 func (l *Logger) Fatal(v ...interface{}) {
-	l.log(FATAL, v...)
+	if l.enabled(FATAL) {
+		l.log(FATAL, fmt.Sprint(v...))
+	}
 	os.Exit(1)
 }
 
 func (l *Logger) Fatalf(format string, v ...interface{}) {
-	l.logf(FATAL, format, v...)
+	if l.enabled(FATAL) {
+		l.log(FATAL, fmt.Sprintf(format, v...))
+	}
 	os.Exit(1)
 }
 
 func (l *Logger) Error(v ...interface{}) {
-	l.log(ERROR, v...)
+	if l.enabled(ERROR) {
+		l.log(ERROR, fmt.Sprint(v...))
+	}
 }
 
 func (l *Logger) Errorf(format string, v ...interface{}) {
-	l.logf(ERROR, format, v...)
+	if l.enabled(ERROR) {
+		l.log(ERROR, fmt.Sprintf(format, v...))
+	}
 }
 
 func (l *Logger) Warn(v ...interface{}) {
-	l.log(WARN, v...)
+	if l.enabled(WARN) {
+		l.log(WARN, fmt.Sprint(v...))
+	}
 }
 
 func (l *Logger) Warnf(format string, v ...interface{}) {
-	l.logf(WARN, format, v...)
+	if l.enabled(WARN) {
+		l.log(WARN, fmt.Sprintf(format, v...))
+	}
 }
 
 func (l *Logger) Info(v ...interface{}) {
-	l.log(INFO, v...)
+	if l.enabled(INFO) {
+		l.log(INFO, fmt.Sprint(v...))
+	}
 }
 
 func (l *Logger) Infof(format string, v ...interface{}) {
-	l.logf(INFO, format, v...)
+	if l.enabled(INFO) {
+		l.log(INFO, fmt.Sprintf(format, v...))
+	}
 }
 
 func (l *Logger) Debug(v ...interface{}) {
-	l.log(DEBUG, v...)
+	if l.enabled(DEBUG) {
+		l.log(DEBUG, fmt.Sprint(v...))
+	}
 }
 
 func (l *Logger) Debugf(format string, v ...interface{}) {
-	l.logf(DEBUG, format, v...)
+	if l.enabled(DEBUG) {
+		l.log(DEBUG, fmt.Sprintf(format, v...))
+	}
 }
 
 func (l *Logger) Trace(v ...interface{}) {
-	l.log(TRACE, v...)
+	if l.enabled(TRACE) {
+		l.log(TRACE, fmt.Sprint(v...))
+	}
 }
 
 func (l *Logger) Tracef(format string, v ...interface{}) {
-	l.logf(TRACE, format, v...)
+	if l.enabled(TRACE) {
+		l.log(TRACE, fmt.Sprintf(format, v...))
+	}
 }
