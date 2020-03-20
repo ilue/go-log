@@ -28,22 +28,22 @@ func init() {
 		"File to write logs to")
 
 	flag.IntVar(&_maxSize,
-		"log-maxsize",
+		"log-maxSize",
 		0,
 		"Maximum size in megabytes of the log file before it gets rotated")
 
 	flag.IntVar(&_maxAge,
-		"log-maxage",
+		"log-maxAge",
 		0,
 		"Maximum number of days to retain old log files based on the timestamp encoded in their filename")
 
 	flag.IntVar(&_maxBackups,
-		"log-maxbackups",
+		"log-maxBackups",
 		0,
 		"Maximum number of old log files to retain")
 
 	flag.BoolVar(&_noConsole,
-		"log-noconsole",
+		"log-noConsole",
 		false,
 		"Don't write logs to console")
 
