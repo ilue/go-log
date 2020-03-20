@@ -8,8 +8,9 @@ import (
 	"path/filepath"
 	"sync"
 
+	"gopkg.in/natefinch/lumberjack.v2"
+
 	"github.com/ilue/go-log"
-	"github.com/natefinch/lumberjack"
 )
 
 var (
