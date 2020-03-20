@@ -16,6 +16,7 @@ import (
 var (
 	_filename   string
 	_maxSize    int
+	_maxAge     int
 	_maxBackups int
 	_noConsole  bool
 )
@@ -24,22 +25,27 @@ func init() {
 	flag.StringVar(&_filename,
 		"log-filename",
 		filepath.Join(os.TempDir(), filepath.Base(os.Args[0])+".log"),
-		"")
+		"File to write logs to")
 
 	flag.IntVar(&_maxSize,
 		"log-maxsize",
 		0,
-		"")
+		"Maximum size in megabytes of the log file before it gets rotated")
+
+	flag.IntVar(&_maxAge,
+		"log-maxage",
+		0,
+		"Maximum number of days to retain old log files based on the timestamp encoded in their filename")
 
 	flag.IntVar(&_maxBackups,
 		"log-maxbackups",
 		0,
-		"")
+		"Maximum number of old log files to retain")
 
 	flag.BoolVar(&_noConsole,
 		"log-noconsole",
 		false,
-		"")
+		"Don't write logs to console")
 
 	log.Default = log.Output(&bootstrap{})
 }
@@ -59,6 +65,7 @@ func (b *bootstrap) Write(p []byte) (int, error) {
 			outs = append(outs, &lumberjack.Logger{
 				Filename:   _filename,
 				MaxSize:    _maxSize,
+				MaxAge:     _maxAge,
 				MaxBackups: _maxBackups,
 			})
 		}
