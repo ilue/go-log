@@ -77,7 +77,7 @@ func (b *bootstrap) Write(p []byte) (int, error) {
 		} else {
 			b.out = ioutil.Discard
 		}
-		log.Default = log.Default.Output(b.out)
+		log.Default = log.WithOutput(b.out)
 	}
 
 	return b.out.Write(p)

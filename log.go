@@ -5,10 +5,14 @@ import (
 	"os"
 )
 
-var Default = NewLogger(DEBUG, SyncWriter(os.Stderr))
+var Default = NewLogger("", DEBUG, SyncWriter(os.Stderr))
 
-func Output(w io.Writer) *Logger {
-	return Default.Output(w)
+func WithName(name string) *Logger {
+	return Default.WithName(name)
+}
+
+func WithOutput(out io.Writer) *Logger {
+	return Default.WithOutput(out)
 }
 
 func Panic(v ...interface{}) {

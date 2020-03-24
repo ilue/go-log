@@ -10,16 +10,21 @@ import (
 )
 
 type Logger struct {
+	name  string
 	level Level
 	out   io.Writer
 }
 
-func NewLogger(level Level, out io.Writer) *Logger {
-	return &Logger{level: level, out: out}
+func NewLogger(name string, level Level, out io.Writer) *Logger {
+	return &Logger{name, level: level, out: out}
 }
 
-func (l *Logger) Output(w io.Writer) *Logger {
-	return NewLogger(l.level, w)
+func (l *Logger) WithName(name string) *Logger {
+	return NewLogger(name, l.level, l.out)
+}
+
+func (l *Logger) WithOutput(out io.Writer) *Logger {
+	return NewLogger(l.name, l.level, out)
 }
 
 func (l *Logger) enabled(level Level) bool {
@@ -56,6 +61,10 @@ func (l *Logger) log(level Level, s string) error {
 		buf.WriteString(padding[:5-len(levelStr)])
 	}
 	buf.WriteByte(' ')
+	if l.name != "" {
+		buf.WriteString(l.name)
+		buf.WriteString(" - ")
+	}
 	buf.WriteString(s)
 	buf.WriteByte('\n')
 
