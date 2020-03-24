@@ -47,7 +47,7 @@ func init() {
 		false,
 		"Don't write logs to console")
 
-	log.Default = log.Output(&bootstrap{})
+	log.Default = log.WithOutput(&bootstrap{})
 }
 
 type bootstrap struct {
