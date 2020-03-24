@@ -16,7 +16,7 @@ type Logger struct {
 }
 
 func NewLogger(name string, level Level, out io.Writer) *Logger {
-	return &Logger{name, level: level, out: out}
+	return &Logger{name: name, level: level, out: out}
 }
 
 func (l *Logger) WithName(name string) *Logger {
