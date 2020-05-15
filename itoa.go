@@ -1,12 +1,11 @@
+//
+// Code modified from ${GOROOT}/src/log/log.go
+//
+
 package log
 
-import (
-	"github.com/valyala/bytebufferpool"
-)
-
-// Code modified from log.itoa
 // Cheap integer to fixed-width decimal ASCII. Give a negative width to avoid zero-padding.
-func itoa(buf *bytebufferpool.ByteBuffer, i int, wid int) {
+func itoa(buf []byte, i int, wid int) []byte {
 	// Assemble decimal in reverse order.
 	var b [20]byte
 	bp := len(b) - 1
@@ -19,5 +18,5 @@ func itoa(buf *bytebufferpool.ByteBuffer, i int, wid int) {
 	}
 	// i < 10
 	b[bp] = byte('0' + i)
-	buf.Write(b[bp:])
+	return append(buf, b[bp:]...)
 }

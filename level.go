@@ -1,46 +1,45 @@
 package log
 
 import (
-	"fmt"
+	"errors"
+	"strconv"
 	"strings"
 )
 
 type Level int32
 
 const (
-	PANIC Level = iota
-	FATAL
-	ERROR
-	WARN
-	INFO
-	DEBUG
-	TRACE
+	PanicLevel Level = iota
+	FatalLevel
+	ErrorLevel
+	WarnLevel
+	InfoLevel
+	DebugLevel
 	_levelCount
 )
 
-var _levelTexts = [_levelCount]string{
+var _levelText = [_levelCount]string{
 	"PANIC",
 	"FATAL",
 	"ERROR",
 	"WARN",
 	"INFO",
 	"DEBUG",
-	"TRACE",
-}
-
-func (l Level) String() string {
-	if l >= 0 && l < _levelCount {
-		return _levelTexts[l]
-	}
-	return fmt.Sprintf("Level(%d)", int(l))
 }
 
 func (l *Level) Set(s string) error {
-	for i, text := range _levelTexts {
-		if strings.EqualFold(s, text) {
-			*l = Level(i)
+	for i := Level(0); i < _levelCount; i++ {
+		if strings.EqualFold(_levelText[i], s) {
+			*l = i
 			return nil
 		}
 	}
-	return fmt.Errorf("invalid log level: %s", s)
+	return errors.New("invalid level: " + s)
+}
+
+func (l Level) String() string {
+	if l < _levelCount {
+		return _levelText[l]
+	}
+	return "Level(" + strconv.Itoa(int(l)) + ")"
 }
